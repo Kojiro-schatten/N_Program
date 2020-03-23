@@ -97,7 +97,15 @@ app.get('/auth/github',
 app.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   function (req, res) {
-    res.redirect('/');
+    var loginFrom = req.cookies.loginFrom;
+    if(loginFrom &&
+      !loginFrom.inclueds('http://') &&
+      !loginFrom.includes('https;//')) {
+        res.clearCookie('loginFrom');
+        res.refirect(loginFrom);
+      } else {
+        res.redirect('/');
+      }
   });
 
 // catch 404 and forward to error handler
